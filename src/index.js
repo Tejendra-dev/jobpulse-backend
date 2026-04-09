@@ -31,7 +31,13 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong' });
 });
-
+// Keep Render awake — pings itself every 10 minutes
+const https = require('https');
+setInterval(() => {
+  https.get('https://jobpulse-backend-qtsk.onrender.com', (res) => {
+    console.log(`Keep-alive ping: ${res.statusCode}`);
+  }).on('error', () => {});
+}, 10 * 60 * 1000); // every 10 minutes
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
